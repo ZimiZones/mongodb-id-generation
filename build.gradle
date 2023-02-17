@@ -1,0 +1,44 @@
+plugins {
+    id 'java'
+    id 'io.quarkus'
+    id 'org.graalvm.buildtools.native' version '0.9.13'
+    id 'java-library'
+    id "org.xbib.gradle.plugin.jflex" version "1.4.0"
+}
+
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(17))
+        vendor = JvmVendorSpec.matching("GraalVM Community")
+    }
+}
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+}
+
+dependencies {
+    implementation enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}")
+    implementation "io.quarkus:quarkus-resteasy-reactive-jackson:${quarkusPlatformVersion}"
+    implementation "io.quarkus:quarkus-arc:${quarkusPlatformVersion}"
+    implementation "io.quarkus:quarkus-smallrye-openapi:${quarkusPlatformVersion}"
+    implementation "io.quarkus:quarkus-mongodb-panache:${quarkusPlatformVersion}"
+
+    testImplementation "io.quarkus:quarkus-test-oidc-server:${quarkusPlatformVersion}"
+    testImplementation "io.quarkus:quarkus-junit5:${quarkusPlatformVersion}"
+    testImplementation "io.quarkus:quarkus-panache-mock:${quarkusPlatformVersion}"
+    testImplementation 'io.rest-assured:rest-assured:4.5.1'
+}
+
+group 'com.me'
+version '0.0.1-SNAPSHOT'
+
+compileJava {
+    options.encoding = 'UTF-8'
+    options.compilerArgs << '-parameters'
+}
+
+compileTestJava {
+    options.encoding = 'UTF-8'
+}
